@@ -9,6 +9,8 @@ on:
       - "data_download/**"
       - "preprocessing/**"
       - "mutation_screening/**"
+      - "ml/**"
+      - "requirements-ml.txt"
       - "README.md"
   pull_request:
     paths:
@@ -30,7 +32,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - name: Compile Python scripts
+      - name: Install ML dependencies
         run: python -m pip install -r requirements-ml.txt
       - name: Compile Python scripts
         run: python -m compileall -q data_download mutation_screening ml
