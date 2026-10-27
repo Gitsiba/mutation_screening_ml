@@ -15,9 +15,12 @@ on:
   pull_request:
     paths:
       - "docs/**"
+      - ".github/workflows/pages.yml"
       - "data_download/**"
       - "preprocessing/**"
       - "mutation_screening/**"
+      - "ml/**"
+      - "requirements-ml.txt"
       - "README.md"
   workflow_dispatch:
 
