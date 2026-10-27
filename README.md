@@ -111,3 +111,23 @@ Next engineering steps: add a pinned environment, test fixtures and automated te
 ## License
 
 No license is currently specified. Add an explicit license before inviting reuse or external contributions.
+
+## Optional supervised ML baseline
+
+The repository includes an **ML training scaffold**, but no model is claimed to have been trained because no curated labelled dataset is supplied. This is deliberate: invented labels or metrics would make the portfolio scientifically misleading.
+
+Install the ML dependencies:
+
+```bash
+python -m pip install -r requirements-ml.txt
+```
+
+Prepare a CSV with a trustworthy target column and relevant predictors, then run:
+
+```bash
+python ml/train_model.py --input path/to/labelled_features.csv --target validated_label --output-dir ml/results
+```
+
+Use `--drop-columns sample_id,patient_id,variant_id` to exclude additional columns. The script makes a stratified held-out split, trains a Random Forest baseline, and saves the model pipeline, metrics, confusion matrix/report, and held-out predictions. Read [the ML input guidance](ml/README.md) first. Random row splits can leak information when rows from the same patient or sample are related; use a leakage-resistant validation design for grouped data.
+
+**This is a general supervised tabular baseline, not a validated cancer mutation or pathogenicity predictor.** It must not be used for diagnosis, treatment, or clinical decisions.
