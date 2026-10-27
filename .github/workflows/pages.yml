@@ -1,0 +1,59 @@
+name: Validate and deploy Mutation Screening Workbench
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "docs/**"
+      - ".github/workflows/pages.yml"
+      - "data_download/**"
+      - "preprocessing/**"
+      - "mutation_screening/**"
+      - "README.md"
+  pull_request:
+    paths:
+      - "docs/**"
+      - "data_download/**"
+      - "preprocessing/**"
+      - "mutation_screening/**"
+      - "README.md"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Compile Python scripts
+        run: python -m compileall -q data_download mutation_screening
+      - name: Check shell syntax
+        run: bash -n preprocessing/fastqc_trim_align.sh
+      - name: Check dashboard files exist
+        run: test -s docs/index.html && test -s docs/mutation_ml_preview.svg
+
+  deploy:
+    if: github.event_name != 'pull_request'
+    needs: validate
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
