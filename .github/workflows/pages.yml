@@ -9,6 +9,8 @@ on:
       - "data_download/**"
       - "preprocessing/**"
       - "mutation_screening/**"
+      - "ml/**"
+      - "requirements-ml.txt"
       - "README.md"
   pull_request:
     paths:
@@ -30,8 +32,10 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+      - name: Install ML dependencies
+        run: python -m pip install -r requirements-ml.txt
       - name: Compile Python scripts
-        run: python -m compileall -q data_download mutation_screening
+        run: python -m compileall -q data_download mutation_screening ml
       - name: Check shell syntax
         run: bash -n preprocessing/fastqc_trim_align.sh
       - name: Check dashboard files exist
