@@ -1,4 +1,9 @@
-# mutation_screening_ml
+# Mutation Screening ML
+
+![Mutation ML dashboard preview](docs/mutation_ml_preview.svg)
+
+*Conceptual dashboard preview only. Charts and metrics are illustrative; this repository does not currently include a trained ML model or computed dashboard results.*
+
 
 End-to-end RNA-seq pipeline for cancer mutation screening using ENCODE data, variant calling, and visualization.
 
