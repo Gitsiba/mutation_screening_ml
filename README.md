@@ -34,6 +34,15 @@ Outputs are generated locally:
 
 The script records retrieval timestamp, URL, SHA-256, filters, and row/label counts. ClinVar changes over time, so preserve the source file and manifest to reproduce a run. See [dataset documentation](data_download/README_clinvar.md) for source verification, access policy, label definitions, feature-selection guidance, and limitations.
 
+Train the chromosome-held-out baseline after preparing the data:
+
+```bash
+python -m pip install -r requirements-ml.txt
+python ml/train_clinvar_baseline.py
+```
+
+This dedicated trainer explicitly selects the six documented features, excludes clinical labels/review status/identifiers/coordinates from predictors, and holds out chromosomes as groups. It writes metrics and held-out predictions to `ml/clinvar_results/`. If a split with both classes cannot be found, it stops rather than silently using a random row split.
+
 **Leakage warning:** only use `reference_allele`, `alternate_allele`, `variant_type`, `ref_gc`, `alt_gc`, and `transition` as baseline features. `clinical_significance_source`, `review_status_source`, identifiers, chromosome and position are provenance columns and must not enter the model. The simple baseline features are intentionally limited and may perform poorly; stronger work needs independently sourced biological features and gene/locus-held-out evaluation. Do not use this for diagnosis or patient-care decisions.
 
 ## RNA-seq variant workflow
